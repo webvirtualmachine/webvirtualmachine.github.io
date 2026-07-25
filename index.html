@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Windows 3.1 VM on Web</title>
+	<script src="https://cdn.jsdelivr.net/npm/v86@0.5.419/build/libv86.js"></script>
+</head>
+<style>
+@font-face
+{
+    font-family: vgados;
+    src:url(https://unpkg.com/xp.css@0.2.6/dist/PerfectDOSVGA437Win.woff2);
+}
+body
+{
+    font-family:sans-serif;
+}
+</style>
+<body>
+<p id="vmstate"></p>
+<div id="screen" style="touch-action: none;">
+	<div style="white-space:pre;font-family:vgados,monospace;font-size:16px;line-height: 16px;"></div>
+	<canvas style="display:none;" id="screen_canvas"></canvas>
+</div>
+<script>
+var V86_SYSTEM_FILE_NAME = "http://webvirtualmachine.github.io/harddisk.img";
+var V86_SYSTEM_FILE_SIZE = "14336";
+var emulator = window.emulator = new V86({
+    wasm_path: "https://cdn.jsdelivr.net/npm/v86@0.5.419/build/v86.wasm",
+    memory_size: 32 * 1024 * 1024,
+    vga_memory_size: 2 * 1024 * 1024,
+    screen_container: document.getElementById("screen"),
+    hda: { //如果是ISO镜像，请把hda改成cdrom；如果是软盘img，改成fda；如果是硬盘img，要用hda（MS-DOS是hda）
+        url:V86_SYSTEM_FILE_NAME,
+    },
+    bios: {
+        url: "https://cdn.jsdelivr.net/npm/v86-system@0.5.0/assets/seabios.bin",
+    },
+    vga_bios: {
+        url: "https://cdn.jsdelivr.net/npm/v86-system@0.5.0/assets/vgabios.bin",
+    },
+    autostart: true
+});
+emulator.bus.register("download-progress", function(loaded)
+{
+    document.getElementById("vmstate").innerHTML=`Loaded${(loaded.loaded / 1024).toFixed(0)}KB/${V86_SYSTEM_FILE_SIZE}KB.`;
+});
+emulator.bus.register("emulator-loaded", function()
+{
+    document.getElementById("vmstate").innerHTML="";
+});
+screen_canvas.addEventListener('click', () => {
+    screen_canvas.requestPointerLock = screen_canvas.requestPointerLock || 
+                              screen_canvas.mozRequestPointerLock || 
+                              screen_canvas.webkitRequestPointerLock;
+    screen_canvas.requestPointerLock();
+});
+</script>
+</body>
+</html>
