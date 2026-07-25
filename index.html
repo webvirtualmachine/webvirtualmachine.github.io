@@ -24,14 +24,14 @@ body
 	<canvas style="display:none;" id="screen_canvas"></canvas>
 </div>
 <script>
-var V86_SYSTEM_FILE_NAME = "http://webvirtualmachine.github.io/harddisk.img";
+var V86_SYSTEM_FILE_NAME = "https://webvirtualmachine.github.io/harddisk.img";
 var V86_SYSTEM_FILE_SIZE = "14336";
 var emulator = window.emulator = new V86({
     wasm_path: "https://cdn.jsdelivr.net/npm/v86@0.5.419/build/v86.wasm",
     memory_size: 32 * 1024 * 1024,
     vga_memory_size: 2 * 1024 * 1024,
     screen_container: document.getElementById("screen"),
-    hda: { //如果是ISO镜像，请把hda改成cdrom；如果是软盘img，改成fda；如果是硬盘img，要用hda（MS-DOS是hda）
+    hda: {
         url:V86_SYSTEM_FILE_NAME,
     },
     bios: {
