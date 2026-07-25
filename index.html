@@ -24,15 +24,15 @@ body
 	<canvas style="display:none;" id="screen_canvas"></canvas>
 </div>
 <script>
-var V86_SYSTEM_FILE_NAME = "https://webvirtualmachine.github.io/harddisk.img";
+var DISK_FILE_PATH = "https://webvirtualmachine.github.io/harddisk.img";
 var V86_SYSTEM_FILE_SIZE = "14336";
 var emulator = window.emulator = new V86({
     wasm_path: "https://cdn.jsdelivr.net/npm/v86@0.5.419/build/v86.wasm",
-    memory_size: 32 * 1024 * 1024,
+    memory_size: 16 * 1024 * 1024,
     vga_memory_size: 2 * 1024 * 1024,
     screen_container: document.getElementById("screen"),
     hda: {
-        url:V86_SYSTEM_FILE_NAME,
+        url:DISK_FILE_PATH,
     },
     bios: {
         url: "https://cdn.jsdelivr.net/npm/v86-system@0.5.0/assets/seabios.bin",
@@ -44,7 +44,7 @@ var emulator = window.emulator = new V86({
 });
 emulator.bus.register("download-progress", function(loaded)
 {
-    document.getElementById("vmstate").innerHTML=`Loaded${(loaded.loaded / 1024).toFixed(0)}KB/${V86_SYSTEM_FILE_SIZE}KB.`;
+    document.getElementById("vmstate").innerHTML=`已加载${(loaded.loaded / 1024).toFixed(0)}KB/${V86_SYSTEM_FILE_SIZE}KB.`;
 });
 emulator.bus.register("emulator-loaded", function()
 {
